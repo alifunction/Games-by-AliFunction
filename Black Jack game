@@ -1,0 +1,142 @@
+import random
+from replit import clear
+
+logo = """
+.------.            _     _            _    _            _    
+|A_  _ |.          | |   | |          | |  (_)          | |   
+|( \/ ).-----.     | |__ | | __ _  ___| | ___  __ _  ___| | __
+| \  /|K /\  |     | '_ \| |/ _` |/ __| |/ / |/ _` |/ __| |/ /
+|  \/ | /  \ |     | |_) | | (_| | (__|   <| | (_| | (__|   < 
+`-----| \  / |     |_.__/|_|\__,_|\___|_|\_\ |\__,_|\___|_|\_\\
+      |  \/ K|                            _/ |                
+      `------'                           |__/           
+"""
+
+def random_card():
+    cards = [11, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10]
+    return random.choice(cards)
+
+def start_game():
+    play_game = input("Do you want to play a BlackJack game? Type 'y' or 'n': ")
+
+    clear()
+
+    dealer_first_card = int(random_card())
+    dealer_second_card = int(random_card())
+
+    if play_game == "y":
+        #User wants to play the game
+        print(logo)
+
+        #user input
+        first_card = int(random_card())
+        second_card = int(random_card())
+        user_card_list = [first_card, second_card]
+        user_score = sum(user_card_list)
+        print(f"Your cards: {user_card_list}, current score: {user_score}")
+
+        #Dealer's card
+        print(f"Dealer's first card: {dealer_first_card}")
+
+        #Ask user if they want another card
+        continue_playing = True
+
+        #User has BlackJack
+        if user_score == 21 and len(user_card_list) == 2:
+            print(f"Your final hand: {user_card_list}, final score: {user_score}")
+            print("DAYUMMM! You have blackjack")
+          
+        #User continues playing  
+        while continue_playing:
+            user_another_card = input("Type 'y' to get another card, type 'n' to pass: ")
+            if user_another_card == 'y':
+                new_user_card = int(random_card())
+
+                #Check if user new card is Ace and total is more than 10 or not
+                if new_user_card == 11 and sum(user_card_list)>10:
+                    user_card_list.append(1)
+                    user_score = sum(user_card_list)
+                elif not new_user_card == 11 and sum(user_card_list)>10:
+                    for i in range(len(user_card_list)):
+                        if user_card_list[i] == 11:
+                            user_card_list[i] == 1
+                    user_card_list.append(new_user_card)
+                    user_score = sum(user_card_list)
+                else:
+                    user_card_list.append(new_user_card)
+                    user_score = sum(user_card_list)
+
+                #Check if New score<=21
+                if user_score<=21 and len(user_card_list)>2:
+                    print(f"Your cards: {user_card_list}, current score: {user_score}")
+
+                    #Dealer's card
+                    print(f"Dealer's first card: {dealer_first_card}")
+
+                #User went over
+                else:
+                    print(f"Your final hand: {user_card_list}, final score: {user_score}")
+                    print(f"Dealer's final hand: [{dealer_first_card}], final score: {dealer_first_card}")
+                    print("""You went over! You LOSE! :")""")
+                    continue_playing = False
+
+            #User doesn't want any card
+            elif user_another_card == 'n':
+                print(f"Your final hand: {user_card_list}, final score: {user_score}")
+
+                #Dealer plays
+                dealer_card_list = [dealer_first_card, dealer_second_card]
+                dealer_score = sum(dealer_card_list)
+
+                dealer_continue_playing = True
+
+                #If dealer has BlackJack
+                if dealer_score == 21:
+                    dealer_final_score = dealer_score
+                    dealer_continue_playing = False
+
+                #Dealer continues playing
+                while dealer_continue_playing:
+                    if dealer_score <= 17:
+                        pick_another_card = int(random_card())
+                        
+                        #Check if dealer new card is Ace and total is more than 10 or not
+                        if pick_another_card == 11 and sum(dealer_card_list)>10:
+                            dealer_card_list.append(1)
+                            dealer_score = sum(dealer_card_list)
+                        elif not pick_another_card == 11 and sum(dealer_card_list)>10:
+                            for i in range(len(dealer_card_list)):
+                                if dealer_card_list[i] == 11:
+                                    dealer_card_list[i] = 1
+                            dealer_card_list.append(pick_another_card)
+                            dealer_score = sum(dealer_card_list)
+                        else:
+                            dealer_card_list.append(pick_another_card)
+                            dealer_score = sum(dealer_card_list)
+
+                    elif dealer_score>17:
+                        dealer_final_score = dealer_score
+                        print(f"Dealer's final hand: {dealer_card_list}, final score: {dealer_final_score}")
+                        dealer_continue_playing = False
+
+                if dealer_final_score == 21 and len(dealer_card_list) == 2:
+                    if user_score == 21:
+                        print("It's a draw!")
+                    else:
+                        print("Dealer has BlackJack! You LOSE")
+                elif dealer_final_score>21:
+                    print("""Dealer went over! You WIN! UwU """)
+                elif dealer_final_score>user_score:
+                    print("You LOSE!")
+                elif dealer_final_score<user_score:
+                    print("YAYYYY! You WIN")
+                elif dealer_final_score == user_score:
+                    print("It's a DRAW!")
+                continue_playing = False
+
+        start_game()
+    else:
+        return
+
+start_game()
+
