@@ -1,0 +1,61 @@
+import random
+
+logo = """
+  / _ \_   _  ___  ___ ___  /__   \ |__   ___    /\ \ \_   _ _ __ ___ | |__   ___ _ __ 
+ / /_\/ | | |/ _ \/ __/ __|   / /\/ '_ \ / _ \  /  \/ / | | | '_ ` _ \| '_ \ / _ \ '__|
+/ /_\\| |_| |  __/\__ \__ \  / /  | | | |  __/ / /\  /| |_| | | | | | | |_) |  __/ |   
+\____/ \__,_|\___||___/___/  \/   |_| |_|\___| \_\ \/  \__,_|_| |_| |_|_.__/ \___|_|  
+"""
+
+print(logo)
+
+print("Welcome to the number guessing game! ")
+
+#Choosing a number
+chosen_number = int(random.randint(1,100))
+print(chosen_number)
+
+print("I'm guessing a number between 1 and 100")
+
+def play_game():
+    final_lives = lives
+    print(f"You have {final_lives} attemps remaining to guess the number")
+    
+    continue_game = True
+    
+    while continue_game:
+        
+        if final_lives == 0:
+            print("""You've run out of guesses. You LOSE! :")""")
+            continue_game = False
+        
+        elif final_lives>0:
+            guess_number = int(input("Make a guess: "))
+        
+            if guess_number>chosen_number:
+                print("Too high")
+                final_lives -= 1
+                print("Guess again.")
+                    
+            elif guess_number<chosen_number:
+                print("Too low.")
+                final_lives -= 1
+                print("Guess again.")
+                    
+            elif guess_number == chosen_number:
+                print(f"You got it! The guessed number is {chosen_number}")
+                continue_game = False
+            
+            if continue_game and final_lives>0:
+                print(f"You have {final_lives} attemps remaining to guess the number")
+            
+choose_difficulty = input("Choose a difficulty.\nType 'easy' or 'hard': ")
+
+if choose_difficulty == "easy":
+    lives = 10
+
+elif choose_difficulty == "hard":
+    lives = 5
+
+final_lives = lives
+play_game()
